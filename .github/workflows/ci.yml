@@ -10,5 +10,9 @@ jobs:
   
       steps:
   
-        - name: Checkout sources
-          uses: actions/checkout@v2
+      - name: Maven version
+        run: mvn --version
+
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
