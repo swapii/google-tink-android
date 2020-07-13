@@ -34,5 +34,10 @@ jobs:
           with:
             command: d2j-smali tink-1.3.0-jar2dex-out
 
+        - name: Convert DEX to JAR
+          uses: swapii/action-dex-tools@master
+          with:
+            command: d2j-dex2jar out.dex
+  
         - name: Print current dir files
           run: ls -la .
