@@ -19,5 +19,10 @@ jobs:
         - name: Copy Google Tink to current dir
           run: mvn dependency:copy -Dartifact=com.google.crypto.tink:tink:1.3.0 -DoutputDirectory=.
         
+        - name: Convert JAR to DEX
+          uses: swapii/action-dex-tools@master
+          with:
+            command: d2j-jar2dex tink-1.3.0.jar
+
         - name: Print current dir files
-          run: pwd && ls -la .
+          run: ls -la .
