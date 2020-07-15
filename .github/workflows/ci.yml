@@ -38,6 +38,19 @@ jobs:
           uses: swapii/action-dex-tools@master
           with:
             command: d2j-dex2jar out.dex
-  
+        
+        - name: Change owner of file
+          run: sudo chown `whoami`:`whoami` out-dex2jar.jar
+
+        - name: Rename JAR file
+          run: mv out-dex2jar.jar tink-android-1.3.0.${{ github.run_number }}.jar
+
         - name: Print current dir files
           run: ls -la .
+
+        - name: Deploy JAR to GitHub Packages Maven repository
+          run: |
+            curl \
+              --upload-file tink-android-1.3.0.${{ github.run_number }}.jar \
+              --header 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' \
+              https://maven.pkg.github.com/swapii/google-tink-android/com/github/swapii/google-tink-android/tink-android/1.3.0.${{ github.run_number }}/
