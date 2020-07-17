@@ -38,4 +38,3 @@ jobs:
               --upload-file tink-android-1.3.0.${{ github.run_number }}.pom \
               --header 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' \
               https://maven.pkg.github.com/swapii/google-tink-android/com/github/swapii/google-tink-android/tink-android/1.3.0.${{ github.run_number }}/
-    
