@@ -4,8 +4,10 @@ on: [push]
 
 jobs:
 
-    build:
+    jar:
   
+      name: Patch and publish JAR
+
       runs-on: ubuntu-latest
   
       steps:
@@ -13,44 +15,39 @@ jobs:
         - name: Checkout sources
           uses: actions/checkout@v2
 
-        - name: Download Google Tink
-          run: mvn dependency:get -DgroupId=com.google.crypto.tink -DartifactId=tink -Dversion=1.3.0
-
-        - name: Copy Google Tink to current dir
+        - name: Download JAR to current dir
           run: mvn dependency:copy -Dartifact=com.google.crypto.tink:tink:1.3.0 -DoutputDirectory=.
         
-        - name: Convert JAR to DEX
-          uses: swapii/action-dex-tools@master
-          with:
-            command: d2j-jar2dex tink-1.3.0.jar
+        - name: Patch JAR
+          run: gradle --project-dir patcher :run -P patcher.args='../tink-1.3.0.jar ../tink-android-1.3.0.${{ github.run_number }}.jar'
 
-        - name: Convert DEX to smali
-          uses: swapii/action-dex-tools@master
-          with:
-            command: d2j-dex2smali tink-1.3.0-jar2dex.dex
-
-        - name: Convert smali to DEX
-          uses: swapii/action-dex-tools@master
-          with:
-            command: d2j-smali tink-1.3.0-jar2dex-out
-
-        - name: Convert DEX to JAR
-          uses: swapii/action-dex-tools@master
-          with:
-            command: d2j-dex2jar out.dex
-        
-        - name: Change owner of file
-          run: sudo chown `whoami`:`whoami` out-dex2jar.jar
-
-        - name: Rename JAR file
-          run: mv out-dex2jar.jar tink-android-1.3.0.${{ github.run_number }}.jar
-
-        - name: Print current dir files
-          run: ls -la .
-
-        - name: Deploy JAR to GitHub Packages Maven repository
+        - name: Deploy JAR to GitHub Packages
           run: |
             curl \
               --upload-file tink-android-1.3.0.${{ github.run_number }}.jar \
+              --header 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' \
+              https://maven.pkg.github.com/swapii/google-tink-android/com/github/swapii/google-tink-android/tink-android/1.3.0.${{ github.run_number }}/
+
+    pom:
+  
+      name: Patch and publish POM
+
+      runs-on: ubuntu-latest
+  
+      steps:
+
+        - name: Checkout sources
+          uses: actions/checkout@v2
+
+        - name: Download POM to current dir
+          run: mvn dependency:copy -Dartifact=com.google.crypto.tink:tink:1.3.0:pom -DoutputDirectory=.
+
+        - name: Generate POM
+          run: cat tink-android.pom | sed -E 's/(<version>)tink-android(<\/version>)/\11.3.0.${{ github.run_number }}\2/' > tink-android-1.3.0.${{ github.run_number }}.pom
+
+        - name: Deploy POM to GitHub Packages
+          run: |
+            curl \
+              --upload-file tink-android-1.3.0.${{ github.run_number }}.pom \
               --header 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' \
               https://maven.pkg.github.com/swapii/google-tink-android/com/github/swapii/google-tink-android/tink-android/1.3.0.${{ github.run_number }}/
