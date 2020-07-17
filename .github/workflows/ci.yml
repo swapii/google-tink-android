@@ -19,11 +19,8 @@ jobs:
         - name: Copy Google Tink to current dir
           run: mvn dependency:copy -Dartifact=com.google.crypto.tink:tink:1.3.0 -DoutputDirectory=.
         
-        - name: Copy original JAR
-          run: cp tink-1.3.0.jar tink-android-1.3.0.${{ github.run_number }}.jar
-
         - name: Patch JAR
-          run: gradle --project-dir patcher :run
+          run: gradle --project-dir patcher :run -P patcher.args='../tink-1.3.0.jar ../tink-android-1.3.0.${{ github.run_number }}.jar'
 
         - name: Deploy JAR to GitHub Packages Maven repository
           run: |
