@@ -30,7 +30,7 @@ jobs:
           run: mvn dependency:copy -Dartifact=com.google.crypto.tink:tink:1.3.0:pom -DoutputDirectory=.
 
         - name: Generate POM
-          run: cat tink-android.pom | sed -E 's/(<version>).+(<\/version>)/\11.3.0.${{ github.run_number }}\2/' > tink-android-1.3.0.${{ github.run_number }}.pom
+          run: cat tink-android.pom | sed -E 's/(<version>)tink-android(<\/version>)/\11.3.0.${{ github.run_number }}\2/' > tink-android-1.3.0.${{ github.run_number }}.pom
 
         - name: Deploy POM to GitHub Packages
           run: |

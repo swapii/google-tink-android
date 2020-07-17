@@ -6,7 +6,7 @@
 
   <groupId>com.github.swapii.google-tink-android</groupId>
   <artifactId>tink-android</artifactId>
-  <version>1</version>
+  <version>tink-android</version>
   <packaging>jar</packaging>
 
   <dependencies>
