@@ -6,16 +6,8 @@
 
   <groupId>com.github.swapii.google-tink-android</groupId>
   <artifactId>tink-android</artifactId>
-  <version>1.3.0</version>
+  <version>1</version>
   <packaging>jar</packaging>
-
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <name>GitHub swapii Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/swapii/google-tink-android</url>
-    </repository>
-  </distributionManagement>
 
   <dependencies>
     <dependency>
